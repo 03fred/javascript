@@ -77,7 +77,7 @@ function mudaCor(cor) {
     elemento.style.backgroundColor = cor;
 }
 ------------------ Validação de formulário
-*/
+
 function valida() {
 
     var nome = document.getElementById("nome").value;
@@ -85,6 +85,81 @@ function valida() {
         alert('nome não pode ser vazio');
     }
 
+}    ------------ Jquery
+
+//verifica se o documento foi carregado
+$(document).ready(function() {
+    $('button').click(function() {
+        $('h1').hide();
+    });
+
+});
+
+$(function() {
+    $('button').click(function() {
+        $('h1').hide();
+    });
+
+});
+
+$(function() {
+    $('button').click(function() {
+        $('h1').css("color", "red");
+    });
+
+});
 
 
-}
+
+$(function() {
+    $('#vermelho').click(function() {
+        $('p').css("color", "red");
+        $('p').fadeOut(); //esconder pausadamente
+        $('p').delay(3000);
+        $('p').css("color", "blue");
+        $('p').fadeIn('slow'); //fadeIn com parametro slow
+    });
+    $('#azul').click(function() {
+        $('p').css("color", "blue")
+            .fadeOut(3000)
+            //inserir texto na tag html
+        $('#mensagem').text("cor alterada com sucesso")
+            .text("cor alterada com sucesso")
+            .css({ color: 'green', border: '1px solid green' })
+            .delay(3000)
+            .addClass('green')
+            .delay(5000)
+            .removeClass('green');
+    });
+
+});*/
+
+$(function() {
+    $('#l1').click(function() {
+        $('#12').hide();
+        $('#13').hide();
+        $('#14').hide();
+        $('#11').show();
+    })
+
+    $('#l2').click(function() {
+        $('#11').hide();
+        $('#13').hide();
+        $('#14').hide();
+        $('#12').show();
+    })
+
+    $('#l3').click(function() {
+        $('#11').hide();
+        $('#13').show();
+        $('#14').hide();
+        $('#12').hide();
+    })
+
+    $('#l4').click(function() {
+        $('#11').hide();
+        $('#13').hide();
+        $('#14').show();
+        $('#12').hide();
+    })
+});
