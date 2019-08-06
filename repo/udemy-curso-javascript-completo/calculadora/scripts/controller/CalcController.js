@@ -147,6 +147,8 @@ if(isNaN(this.getLastOperation()))
 }
 
 getResult(){
+
+
   return eval(this._operation.join(""));
 }
 
@@ -197,6 +199,10 @@ getLastItem(isOperator = true){
       lastItem = this._operation[i];
          break;
     }
+  }
+  if(!lastItem){
+   lastItem = (isOperator)?this._lastOperator : this._lastNumber;
+
   }
   return lastItem;
 }
