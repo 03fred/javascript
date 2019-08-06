@@ -1,6 +1,8 @@
 class CalcController{
 
 constructor(){
+this._audioOnOff = false;
+this._audio = new Audio('click.mp3');
 this._lastOperator = '';
 this._lastNumber = '';
 this._operation = [];
@@ -11,19 +13,35 @@ this._dateE2 = document.querySelector("#hora");
 this._currentDate;
 this.initialize();
 this.initButtonsEvents();
+this.initKeyboard();
 }
 
 initialize(){
 this.getDisplayDateTime();
-
+this.pasteFromClipBoard();
 setInterval(()=>{
 this.getDisplayDateTime();
 },1000);
 this.setLastNumberToDisplay();
+document.querySelectorAll('.btn-ac').forEach(btn =>{
+btn.addEventListener('dblclick', e =>{
+this.toggleAudio();
+});
+});
+
 
 }
 
+toggleAudio(){
+  this._audioOnOff = !this._audioOnOff;
+}
 
+playAudio(){
+  if(this._audioOnOff){
+    this._audio.currentTime = 0;
+    this._audio.play();
+  }
+}
 
 addEventListenerAll(element, events, fn){
     events.split(' ').forEach(event => {
@@ -33,6 +51,7 @@ addEventListenerAll(element, events, fn){
   }
   
 execBtn(value){
+  this.playAudio();
 switch(value){
 
   case 'ac':
@@ -68,7 +87,7 @@ case 'igual':
   break;
 
 case 'ponto':
-    this.addOperation('.');
+    this.addDot('.');
   break; 
 
 case '0':
@@ -93,6 +112,22 @@ break;
 
 }
 
+addDot(){
+   let lastOperation = this.getLastOperation();
+   
+   if(typeof lastOperation === 'string' && lastOperation.split('').index('.') > -1)return;
+
+
+   if(this.isOperator(lastOperation) || !lastOperation){
+     this.pushOperation('0.');
+   }else{
+
+      this.setLastOperation(lastOperation.toString() + '.');
+    
+   }
+this.setLastNumberToDisplay();
+}
+
 isOperator(value){
 return(['+','-','*','%','/'].indexOf(value) > -1);
 }
@@ -103,8 +138,87 @@ setError()
 
 }
 
+initKeyboard(){
+  this.playAudio();
+document.addEventListener('keyup', e=>{
+  switch(e.key){
+
+    case 'Escape':
+    this.clearAll();
+    break;
+  
+   case 'Backspace':
+    this.clearEntry();
+   break;
+  
+   case '+':
+   case '-':
+   case '/':
+   case '*':
+   case '%':
+      this.addOperation(e.key);
+  break;
+  
+  case 'Enter':
+  case '=':
+    this.calc();
+    break;
+  
+  case '.':
+  case ',':
+
+      this.addDot('.');
+    break; 
+  
+  case '0':
+  case '1':
+  case '2':
+  case '3':
+  case '4':
+  case '5':
+  case '6':
+  case '7':
+  case '8':
+  case '9':
+  this.addOperation(parseInt(e.key));
+  break;
+  
+  case 'c':
+    if(e.ctrlKey) this.copyToClipoboard();
+    break;
+  }
+
+});
+
+}
+
+copyToClipoboard(){
+let input = document.createElement('input');
+input.value = this.displayCalc;
+document.body.appendChild(input);
+input.select();
+document.execCommand("Copy");
+input.remove();
+
+}
+
+pasteFromClipBoard(){
+document.addEventListener('paste', e =>{
+  
+let text =  e.clipboardData.getData('Text');
+this.displayCalc =  parseFloat(text);
+
+});
+}
+
+
+
+
+
 clearAll(){
  this._operation = [0];
+ this._lastNumber ='';
+ this._lastOperator = '';
  this.setLastNumberToDisplay();
 
 }
@@ -138,7 +252,7 @@ if(isNaN(this.getLastOperation()))
 
      }else{
     let newValue = this.getLastOperation().toString() + value.toString();
-    this.setLastOperation(parseInt(newValue));
+    this.setLastOperation(parseFloat(newValue));
     this.setLastNumberToDisplay();
      }
 
@@ -148,8 +262,14 @@ if(isNaN(this.getLastOperation()))
 
 getResult(){
 
-
+try{
   return eval(this._operation.join(""));
+}catch(e){
+  setTimeout(()=>{
+    this.setError();
+  }, 1);
+  
+}
 }
 
 calc(){
@@ -269,6 +389,13 @@ get displayCalc(){
 }
 
 set displayCalc (displayCalc){
+
+  if(displayCalc.toString().length > 10 ){
+    this.setError();
+    return false;
+  }
+
+
 this._displayCalcE1.innerHTML = displayCalc;
 }
 
