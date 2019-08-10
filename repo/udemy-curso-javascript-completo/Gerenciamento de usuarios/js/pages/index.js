@@ -49,15 +49,20 @@ user['gender']  = aux == null ? field.value : aux;
 
 });
 
-//console.log(user);
-addLine(user);
+var objectUser = new User(user.name,user.gender,user.birth,user.coutry,user.email,
+  user.password,user.photo,user.admin);
+
+addLine(objectUser);
+
+
+
 });
 
 function addLine(dataUser){
-    
+    console.log(dataUser);
     tr = document.createElement("tr");
  
-    tr.innerHTML = `
+    document.getElementById("table-users").innerHTML = `
     <tr>
     <td><img src="img/user1-128x128.jpg" alt="User Image" class="img-circle img-sm"></td>
     <td>${dataUser.name}</td>
@@ -72,7 +77,6 @@ function addLine(dataUser){
  
     `;
 
-document.getElementById("table-users").appendChild(tr);
 }
 
 
