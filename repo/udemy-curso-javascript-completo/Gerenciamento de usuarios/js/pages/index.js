@@ -1,14 +1,60 @@
 
+
 function verifica(){
 var fields = document.querySelectorAll("#form-user-create [name]");
-
+var user = {} ;
+var aux = null;
 fields.forEach((field) =>{
 
-if(field.name == "gender" && field.checked) console.log(field);
+//user[field.name]= field.value;
 
+if(field.name == "gender" && field.checked) 
+{
+   aux = field.value;
+}else{
+    user[field.name] = field.value;
+}
+
+user['gender']  = aux == null ? field.value : aux; 
 
 });
+
+console.log(user['gender']);
 }
+
+document.querySelectorAll("button").forEach((btn)=>{
+ btn.addEventListener("click", function(){
+  //  console.log("clickou");
+ });
+
+});
+
+document.getElementById("form-user-create").addEventListener("submit" ,function(event){
+event.preventDefault();
+var fields = document.querySelectorAll("#form-user-create [name]");
+var user = {} ;
+var aux = null;
+fields.forEach((field) =>{
+
+//user[field.name]= field.value;
+
+if(field.name == "gender" && field.checked) 
+{
+   aux = field.value;
+}else{
+    user[field.name] = field.value;
+}
+
+user['gender']  = aux == null ? field.value : aux; 
+
+});
+
+console.log(user);
+});
+
+
+
+
 /*var nome = document.querySelector("#exampleInputName");
 var sexo = document.querySelectorAll("#form-user-create [name=gender]:checked");
 var dtNascimento = document.querySelector("#exampleInputBirth");
