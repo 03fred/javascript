@@ -1,5 +1,15 @@
 
 
+let  userController = new UserController("form-user-create","table-users");
+
+
+
+
+
+
+
+/*
+
 function verifica(){
 var fields = document.querySelectorAll("#form-user-create [name]");
 var user = {} ;
@@ -58,29 +68,8 @@ addLine(objectUser);
 
 });
 
-function addLine(dataUser){
-    console.log(dataUser);
-    tr = document.createElement("tr");
- 
-    document.getElementById("table-users").innerHTML = `
-    <tr>
-    <td><img src="img/user1-128x128.jpg" alt="User Image" class="img-circle img-sm"></td>
-    <td>${dataUser.name}</td>
-    <td>${dataUser.email}</td>
-    <td>${dataUser.admin}</td>
-    <td>${dataUser.birth}</td>
-    <td>
-      <button type="button" class="btn btn-primary btn-xs btn-flat">Editar</button>
-      <button type="button" class="btn btn-danger btn-xs btn-flat">Excluir</button>
-    </td>
-  </tr>
- 
-    `;
 
-}
-
-
-/*var nome = document.querySelector("#exampleInputName");
+var nome = document.querySelector("#exampleInputName");
 var sexo = document.querySelectorAll("#form-user-create [name=gender]:checked");
 var dtNascimento = document.querySelector("#exampleInputBirth");
 var pais = document.querySelector("#exampleInputCountry");
