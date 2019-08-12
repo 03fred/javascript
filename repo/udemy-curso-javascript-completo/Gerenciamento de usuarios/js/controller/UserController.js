@@ -10,11 +10,48 @@ onSubmit(){
 
     this.formE1.addEventListener("submit" ,event =>{
     event.preventDefault();
-    this.addLine(this.getValues());
+    let values = this.getValues();
+    values.photo = "";
+    
+    this.getPhoto().then(
+    (content) => {
+      values.photo = content;
+      this.addLine(values);
+    },
+    (e) => {
+     console.error(e);
 
     });
 
+    
+    });
+
 }
+
+
+getPhoto(){
+return new Promise((resolve,reject) => {
+  
+  let fileReader = new FileReader();
+  let elements = [...this.formE1.elements].filter(item => {
+
+    if(item.name === 'photo'){
+      return item;
+    }
+  });
+
+  var file = elements[0].files[0];
+  fileReader.onload = () => {
+   resolve(fileReader.result);
+  };
+fileReader.onerror = (e) => {
+reject(e);
+};
+  fileReader.readAsDataURL(file);
+
+});
+  
+};
 
 getValues(){
   var user = {};
@@ -44,7 +81,7 @@ getValues(){
          
            this.tableEL.innerHTML = `
             <tr>
-            <td><img src="img/user1-128x128.jpg" alt="User Image" class="img-circle img-sm"></td>
+            <td><img src="${dataUser.photo}" alt="User Image" class="img-circle img-sm"></td>
             <td>${dataUser.name}</td>
             <td>${dataUser.email}</td>
             <td>${dataUser.admin}</td>
