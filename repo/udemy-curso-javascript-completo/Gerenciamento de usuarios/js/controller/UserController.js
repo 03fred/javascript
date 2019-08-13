@@ -10,6 +10,9 @@ onSubmit(){
 
     this.formE1.addEventListener("submit" ,event =>{
     event.preventDefault();
+    let btn = this.formE1.querySelector("[type=submit]");
+    btn.disabled = true;
+
     let values = this.getValues();
     values.photo = "";
     
@@ -17,6 +20,9 @@ onSubmit(){
     (content) => {
       values.photo = content;
       this.addLine(values);
+
+      this.formE1.reset();
+      btn.disabled = false;
     },
     (e) => {
      console.error(e);
@@ -47,7 +53,7 @@ return new Promise((resolve,reject) => {
 fileReader.onerror = (e) => {
 reject(e);
 };
-  fileReader.readAsDataURL(file);
+  (file) == true?fileReader.readAsDataURL(file):resolve('img/boxed-bg.jpg');
 
 });
   
@@ -61,6 +67,9 @@ getValues(){
         if(field.name == "gender" && field.checked) 
         {
            aux = field.value;
+        }else if(field.name === "admin"){
+        user[field.name]=field.checked;
+        
         }else{
             user[field.name] = field.value;
         }
@@ -76,16 +85,14 @@ getValues(){
         }        
     
     addLine(dataUser){
-            
-            //tr = document.createElement("tr");
-         
-           this.tableEL.innerHTML = `
+            let tr = document.createElement("tr");
+            tr.innerHTML = `
             <tr>
             <td><img src="${dataUser.photo}" alt="User Image" class="img-circle img-sm"></td>
-            <td>${dataUser.name}</td>
-            <td>${dataUser.email}</td>
-            <td>${dataUser.admin}</td>
-            <td>${dataUser.birth}</td>
+            <td>${dataUser._name}</td>
+            <td>${dataUser._email}</td>
+            <td>${dataUser._admin === true?'SIM':'NÃO'}</td>
+            <td>${Utils.dateFormat(dataUser._register)}</td>
             <td>
               <button type="button" class="btn btn-primary btn-xs btn-flat">Editar</button>
               <button type="button" class="btn btn-danger btn-xs btn-flat">Excluir</button>
@@ -93,7 +100,7 @@ getValues(){
           </tr>
          
             `;
-        
+        this.tableEL.appendChild(tr);
         }
 }
 
