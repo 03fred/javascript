@@ -4,8 +4,15 @@ class UserController {
     this.formE1 = document.getElementById(formId);
     this.tableEL = document.getElementById(tableId);
     this.onSubmit();
+    this.onEdit();
   }
 
+  onEdit() {
+    document.querySelector("#user-update .btn-cancel").addEventListener("click", event => {
+      this.showPanelCreate();
+    });
+
+  }
   onSubmit() {
 
     this.formE1.addEventListener("submit", event => {
@@ -108,32 +115,79 @@ class UserController {
             <td>${dataUser._admin === true ? 'SIM' : 'NÃO'}</td>
             <td>${Utils.dateFormat(dataUser._register)}</td>
             <td>
-              <button type="button" class="btn btn-primary btn-xs btn-flat">Editar</button>
+              <button type="button" class="btn btn-edit btn-primary btn-xs btn-flat">Editar</button>
               <button type="button" class="btn btn-danger btn-xs btn-flat">Excluir</button>
             </td>
           </tr>
          
             `;
+
+    tr.querySelector(".btn-edit").addEventListener("click", e => {
+
+      let json = JSON.parse(tr.dataset.user);
+      let form = document.querySelector("#user-update");
+
+      for (let name in json) {
+        let field = form.querySelector("[name =" + name.replace("_", "") + "]");
+
+        if (field) {
+          switch (field.type) {
+            case 'file':
+              continue;
+              break;
+            case 'radio':
+             field = form.querySelector("[name =" + name.replace("_", "") + "][value=" + json[name] + "]");
+              field.checked = true;
+              break;
+            case 'checkbox':
+              field.checked = json[name];
+              break;
+            default:
+              field.value = json[name];
+
+          }
+
+
+        }
+      }
+
+      this.showPanelUpdate();
+
+    });
     this.tableEL.appendChild(tr);
     this.updateCount();
   }
 
-  updateCount(){
-    var that = this;
-      let numberUsers = 0
-      let numberAdmin = 0;
+  showPanelCreate() {
+    document.querySelector("#user-create").style.display = 'block';
+    document.querySelector("#user-update").style.display = 'none';
 
-    [...this.tableEL.children].forEach(tr=> {
-      
-       numberUsers++;
-       let user = JSON.parse(tr.dataset.user);
-       if(user._admin)numberAdmin++;
-       
+  }
+
+  showPanelUpdate() {
+    document.querySelector("#user-create").style.display = 'none';
+    document.querySelector("#user-update").style.display = 'block';
+
+
+
+  }
+
+  updateCount() {
+
+    let numberUsers = 0
+    let numberAdmin = 0;
+
+    [...this.tableEL.children].forEach(tr => {
+
+      numberUsers++;
+      let user = JSON.parse(tr.dataset.user);
+      if (user._admin) numberAdmin++;
+
 
     });
     console.log(numberUsers);
-     document.querySelector("#number-users").innerHTML =numberUsers;
-     document.querySelector("#number-admin").innerHTML =numberAdmin;
+    document.querySelector("#number-users").innerHTML = numberUsers;
+    document.querySelector("#number-admin").innerHTML = numberAdmin;
 
   }
 
