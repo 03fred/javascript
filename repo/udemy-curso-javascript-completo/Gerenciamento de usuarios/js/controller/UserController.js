@@ -14,8 +14,8 @@ onSubmit(){
     btn.disabled = true;
 
     let values = this.getValues();
-    values.photo = "";
-    
+    if(!values)return false;
+    //values.photo = "";
     this.getPhoto().then(
     (content) => {
       values.photo = content;
@@ -60,16 +60,17 @@ reject(e);
 };
 
 getValues(){
-  var user = {};
+  let user = {};
   var aux ='';
-  let isValid = true;
+  let isvalid = true;
 [...this.formE1.elements].forEach((field) =>{
         
   if(['name','email','password'].indexOf(field.name) > -1 && !field.value){
       
       field.parentElement.classList.add('has-error');
-      return false;
       isvalid = false;
+      return false;
+      
 
   }
 
