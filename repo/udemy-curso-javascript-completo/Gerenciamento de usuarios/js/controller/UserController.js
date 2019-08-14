@@ -6,6 +6,7 @@ class UserController {
     this.tableEL = document.getElementById(tableId);
     this.onSubmit();
     this.onEdit();
+   // this.selectAll();
   }
 
   onEdit() {
@@ -31,8 +32,8 @@ class UserController {
 
       this.getPhoto(this.formUpdateE1).then(
         (content) => {
-        result._photo = (values.photo !=  true) ? userOld._photo : content;
-        tr.dataset.user = JSON.stringify(result);
+          result._photo = (values.photo != true) ? userOld._photo : content;
+          tr.dataset.user = JSON.stringify(result);
 
           tr.innerHTML = `
       <tr>
@@ -73,8 +74,8 @@ class UserController {
       this.getPhoto(this.formE1).then(
         (content) => {
           values.photo = content;
+          this.insert(values);
           this.addLine(values);
-
           this.formE1.reset();
           btn.disabled = false;
         },
@@ -155,8 +156,39 @@ class UserController {
 
   }
 
+  getUsersStorage(){
+    let users = [];
+
+    if (sessionStorage.getItem("user")) {
+      users = JSON.parse(sessionStorage.getItem("user"));
+    }
+    return users;
+
+  }
+  selectAll(){
+    let users = this.getUsersStorage();
+    users.forEach(dataUser => {
+      let user = new User();
+      user.loadFromJSON(dataUser);
+      this.addLine(user);
+       
+    });
+
+  
+  }
+
+  insert(data) {
+
+    let users = this.getUsersStorage();
+    users.push(data);
+    sessionStorage.setItem("users", JSON.stringify(users));
+    
+  }
+
   addLine(dataUser) {
     let tr = document.createElement("tr");
+
+
     tr.dataset.user = JSON.stringify(dataUser);
     tr.innerHTML = `
             <tr>
@@ -167,7 +199,7 @@ class UserController {
             <td>${Utils.dateFormat(dataUser._register)}</td>
             <td>
               <button type="button" class="btn btn-edit btn-primary btn-xs btn-flat">Editar</button>
-              <button type="button" class="btn btn-danger btn-xs btn-flat">Excluir</button>
+              <button type="button" class="btn btn-danger btn-delete btn-xs btn-flat">Excluir</button>
             </td>
           </tr>
          
@@ -180,6 +212,15 @@ class UserController {
 
 
   addEventsTR(tr) {
+    tr.querySelector(".btn-delete").addEventListener("click", e => {
+      if (confirm("Deseja realmente exluir?")) {
+
+        tr.remove();
+        this.updateCount();
+      }
+
+    });
+
     tr.querySelector(".btn-edit").addEventListener("click", e => {
 
       let json = JSON.parse(tr.dataset.user);
