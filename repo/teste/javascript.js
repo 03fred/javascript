@@ -1,6 +1,6 @@
 
 function enviar() {
-    var value = parseInt(document.querySelector('#test').value);
+    let value = parseInt(document.querySelector('#test').value);
 
     let i, previus = 0, next = 1,sum = 0 ;
 
@@ -10,14 +10,38 @@ function enviar() {
       next = sum;
     }
 
-    var element_father  = document.body;
+    let element_father  = document.body;
    
-    var element = document.createElement('h1');
+    let element = document.createElement('h1');
 
-    var text  =  document.createTextNode(`Fibonacci de ${value} é ${previus}`);
+    let text  =  document.createTextNode(`Fibonacci de ${value} é ${previus}`);
 
     element.appendChild(text);
 
    element_father.appendChild(element);
 
+   
+
+}
+
+function multiplicationTable(){
+    let element_father  = document.body;
+    let p = document.createElement('p');
+    let elements = '';
+    let tab = 0;
+ 
+    for(let i = 1; i < 11;i++){
+       tab = i * 10 ;
+       elements += `
+       ${i} * 10 = ${tab}
+       `;
+ 
+    }
+    
+    let texts  =  document.createTextNode(elements);
+    p.appendChild(texts);
+    let test =  document.querySelector("#test");
+    test.style.backgroundColor = "blue";
+     
+    element_father.appendChild(p);
 }
